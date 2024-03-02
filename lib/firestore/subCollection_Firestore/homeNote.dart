@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttercourse/firestore/cardNotes.dart';
 import 'package:fluttercourse/firestore/subCollection_Firestore/addNote.dart';
@@ -114,6 +115,13 @@ class _HomepageState extends State<homeNote> {
                               .collection("note")
                               .doc(data[index].id)
                               .delete();
+                          if (data[index]["url"] != null &&
+                              data[index]["url"] != "none") {
+                            FirebaseStorage.instance
+                                .refFromURL(data[index]["url"])
+                                .delete();
+                          }
+
                           Navigator.pushReplacement(context, MaterialPageRoute(
                             builder: (context) {
                               return homeNote(categoryId: widget.categoryId);
@@ -122,23 +130,29 @@ class _HomepageState extends State<homeNote> {
                         },
                       )..show();
                     },
-                    child: cardSmallNotes(
-                      onDismiss: () async {
-                        await category
-                            .doc(widget.categoryId)
-                            .collection("note")
-                            .doc(data[index].id)
-                            .delete();
-
-                        setState(() {});
-                      },
-                      name: "${data[index]["note"]}",
-                      // onTap: () {
-                      //   print(
-                      //     data[index]['name'],
-                      //   );
-                      //   print(data[index].id);
-                      // },
+                    child: Column(
+                      children: [
+                        //  var variableName=  if (data[index]["url"]!="none")Image.network(data[index]["url"],height: 80),
+                        cardSmallNotes(
+                          onDismiss: () async {
+                            await category
+                                .doc(widget.categoryId)
+                                .collection("note")
+                                .doc(data[index].id)
+                                .delete();
+                            setState(() {});
+                          },
+                          name: "${data[index]["note"]}",
+                          imageUrl: "${data[index]["url"]}",
+                          // url: data[index]["url"],
+                          // onTap: () {
+                          //   print(
+                          //     data[index]['name'],
+                          //   );
+                          //   print(data[index].id);
+                          // },
+                        ),
+                      ],
                     ));
               },
             ),

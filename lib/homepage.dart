@@ -27,10 +27,10 @@ class _HomepageState extends State<Homepage> {
   //late final  String documentId;
 
   getData() async {
-    QuerySnapshot querySnapshot = await category
+    QuerySnapshot getdata = await category
         .where("id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .get(); // انا كدا جبت الداتا
-    data.addAll(querySnapshot
+    data.addAll(getdata
         .docs); //querySnapshot.docs روحت عملت ليست وقولت ضيف فيها الداتا اللي جايه من ال
     setState(() {}); // عشان لما اعمل ريفرش الداتا تتنشط معاك
   }
